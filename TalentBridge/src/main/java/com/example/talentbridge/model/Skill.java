@@ -6,13 +6,12 @@ import com.example.talentbridge.model.common.BaseEntity;
 
 import java.util.List;
 
-
 @Entity
 @Table(name = "skills")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Skill extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

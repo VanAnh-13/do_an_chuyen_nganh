@@ -9,13 +9,12 @@ import com.example.talentbridge.model.constant.Gender;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @JsonPropertyOrder({"id", "name", "email", "password", "age", "address", "gender"})
 public class User extends BaseEntity {
 

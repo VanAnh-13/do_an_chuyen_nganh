@@ -58,6 +58,8 @@ public class UserController {
             @Filter Specification<User> spec,
             Pageable pageable
     ) {
+
+
         Page<DefaultUserResponseDto> page = userService.findAllUser(spec, pageable);
 
         PageResponseDto<DefaultUserResponseDto> res = new PageResponseDto<>(
@@ -132,5 +134,6 @@ public class UserController {
     ) {
         userService.updateSelfUserAvatar(avatarFile);
     }
+
 
 }

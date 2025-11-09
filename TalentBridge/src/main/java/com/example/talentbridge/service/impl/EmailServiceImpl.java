@@ -10,6 +10,7 @@ import com.example.talentbridge.model.Subscriber;
 import com.example.talentbridge.repository.JobRepository;
 import com.example.talentbridge.repository.SubscriberRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,12 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        name = "spring.mail.host",
+        matchIfMissing = false
+)
 public class EmailServiceImpl implements com.example.talentbridge.service.EmailService {
 
     private final JavaMailSender mailSender;

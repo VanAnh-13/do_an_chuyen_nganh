@@ -128,10 +128,10 @@ public class CompanyController {
     }
 
     @GetMapping("/me")
-    @ApiMessage(value = "Get Company by current user")
+    @ApiMessage(value = "Get Company for current user")
     @PreAuthorize("hasAuthority('GET /companies/me')")
     @Operation(
-            summary = "Get Company by current user",
+            summary = "Get Company for current user",
             description = "Required permission: <b>GET /companies/me</b>"
     )
     public ResponseEntity<?> findSelfCompany() {
@@ -141,10 +141,10 @@ public class CompanyController {
     }
 
     @GetMapping("/me/users")
-    @ApiMessage(value = "Get recruiter users list of current user")
+    @ApiMessage(value = "Get recruiter user list for current user")
     @PreAuthorize("hasAuthority('GET /companies/me/users')")
     @Operation(
-            summary = "Get recruiter users list of current user",
+            summary = "Get recruiter user list for current user",
             description = "Required permission: <b>GET /companies/me/users</b>"
     )
     public ResponseEntity<?> findAllRecruitersBySelfCompany() {
@@ -169,10 +169,10 @@ public class CompanyController {
     }
 
     @PutMapping(value = "/me")
-    @ApiMessage(value = "Update Company of current user")
+    @ApiMessage(value = "Update Company for current user")
     @PreAuthorize("hasAuthority('PUT /companies/me')")
     @Operation(
-            summary = "Update Company of current user",
+            summary = "Update Company for current user",
             description = "Required permission: <b>PUT /companies/me</b>"
     )
     public ResponseEntity<?> updateSelfCompany(
@@ -200,11 +200,12 @@ public class CompanyController {
         );
     }
 
+
     @PostMapping("/me/users")
-    @ApiMessage(value = "Add other user to current user's company")
+    @ApiMessage(value = "Add another user to current user's company")
     @PreAuthorize("hasAuthority('POST /companies/me/users')")
     @Operation(
-            summary = "Add other user to current user's company",
+            summary = "Add another user to current user's company",
             description = "Required permission: <b>POST /companies/me/users</b>"
     )
     public ResponseEntity<Void> addMemberToCompany(
@@ -215,10 +216,10 @@ public class CompanyController {
     }
 
     @PutMapping("/me/users")
-    @ApiMessage(value = "Remove other user from current user's company")
+    @ApiMessage(value = "Remove another user from current user's company")
     @PreAuthorize("hasAuthority('PUT /companies/me/users')")
     @Operation(
-            summary = "Remove other user from current user's company",
+            summary = "Remove another user from current user's company",
             description = "Required permission: <b>PUT /companies/me/users</b>"
     )
     public ResponseEntity<Void> removeMemberFromCompany(

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.example.talentbridge.model.SessionMeta;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
@@ -18,8 +19,12 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-
 @Configuration
+@ConditionalOnProperty(
+        name = "spring.cache.type",
+        havingValue = "redis",
+        matchIfMissing = false
+)
 public class RedisConfig {
 
     @Value("${redis.host}")
@@ -28,13 +33,13 @@ public class RedisConfig {
     @Value("${redis.port}")
     private int redisPort;
 
-    @Value("${redis.password}")
+    @Value("${redis.password:}")
     private String redisPassword;
 
     // =====================================================================
-    // 1. Kết nối tới Redis
-    //    - Định nghĩa RedisConnectionFactory với host, port, password
-    //    - Bean này dùng chung cho RedisTemplate & Spring Cache
+    // 1. Connect to Redis
+    //    - Define RedisConnectionFactory with host, port, password
+    //    - This bean is shared by RedisTemplate & Spring Cache
     // =====================================================================
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
@@ -50,7 +55,7 @@ public class RedisConfig {
 
 
     // =====================================================================
-    // 2. Đăng ký RedisTemplate
+    // 2. Register RedisTemplate
     // =====================================================================
     @Bean
     public RedisTemplate<String, SessionMeta> redisSessionMetaTemplate(RedisConnectionFactory connectionFactory) {
@@ -75,9 +80,9 @@ public class RedisConfig {
 
 
     // =====================================================================
-    // 3. Cấu hình Spring Cache với Redis
-    //    - Thiết lập thời gian sống mặc định cho cache (TTL)
-    //    - Chỉ áp dụng cho các cache dùng annotation (@Cacheable, @CacheEvict...)
+    // 3. Configure Spring Cache with Redis
+    //    - Set default time-to-live for cache (TTL)
+    //    - Only applies to caches using annotations (@Cacheable, @CacheEvict...)
     // =====================================================================
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {
@@ -87,9 +92,9 @@ public class RedisConfig {
     }
 
     // =====================================================================
-    // 4. Khởi tạo CacheManager sử dụng Redis
-    //    - Quản lý cache thông qua Spring Cache (annotation)
-    //    - Tự động áp dụng các cấu hình phía trên cho toàn bộ cache
+    // 4. Initialize CacheManager using Redis
+    //    - Manage cache through Spring Cache (annotation)
+    //    - Automatically apply the above configurations to all caches
     // =====================================================================
     @Bean
     public RedisCacheManager cacheManager(

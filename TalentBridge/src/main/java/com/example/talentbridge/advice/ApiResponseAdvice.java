@@ -18,11 +18,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import java.util.Arrays;
 import java.util.List;
 
-
 @RestControllerAdvice
 public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
     private static final List<String> EXCLUDE_PATTERNS = Arrays.asList(
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/webjars/**",
             "/favicon.ico",
+            "/actuator/**",
             "/error",
             "/doc.html"
     );

@@ -5,15 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import com.example.talentbridge.model.Subscriber;
 import com.example.talentbridge.repository.SubscriberRepository;
 import com.example.talentbridge.service.EmailService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(
+        name = "spring.mail.host",
+        matchIfMissing = false
+)
 public class JobMailCronService {
 
     private final SubscriberRepository subscriberRepository;
@@ -33,6 +37,6 @@ public class JobMailCronService {
             }
         }
 
-        log.info("Đã gửi job mail cho {} users, thất bại {}", sent, failed);
+        log.info("Sent job mail to {} users, failed {}", sent, failed);
     }
 }

@@ -5,13 +5,12 @@ import lombok.*;
 import com.example.talentbridge.model.common.BaseEntity;
 import com.example.talentbridge.model.constant.ResumeStatus;
 
-
 @Entity
 @Table(name = "resumes")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Resume extends BaseEntity {
 
     @Id

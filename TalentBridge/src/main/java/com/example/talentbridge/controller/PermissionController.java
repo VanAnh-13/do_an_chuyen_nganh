@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @Tag(name = "Permission")
 @RestController
 @RequestMapping("/permissions")
@@ -31,9 +32,9 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @PostMapping
-    @ApiMessage(value = "Create permission")
+    @ApiMessage(value = "Create Permission")
     @Operation(
-            summary = "Create permission",
+            summary = "Create Permission",
             description = "Required permission: <b>'GET /permissions/*</b>"
     )
     public DefaultPermissionResponseDto savePermission(
@@ -42,10 +43,11 @@ public class PermissionController {
         return permissionService.savePermission(defaultPermissionRequestDto);
     }
 
+
     @GetMapping
-    @ApiMessage("Get permission list")
+    @ApiMessage("Get Permission list")
     @Operation(
-            summary = "Get permission list",
+            summary = "Get Permission list",
             description = "Required permission: <b>'GET /permissions/*</b>"
     )
     public ResponseEntity<?> findAllPermissions(
@@ -66,9 +68,9 @@ public class PermissionController {
     }
 
     @GetMapping("/all")
-    @ApiMessage("Get all permissions (no pagination)")
+    @ApiMessage("Get all Permissions (no pagination)")
     @Operation(
-            summary = "Get all permissions (no pagination)",
+            summary = "Get all Permissions (no pagination)",
             description = "Required permission: <b>'GET /permissions/*</b>"
     )
     public ResponseEntity<?> findAllPermissionsNoPaging(
@@ -82,9 +84,9 @@ public class PermissionController {
     }
 
     @PutMapping("/{id}")
-    @ApiMessage(value = "Update permission")
+    @ApiMessage(value = "Update Permission")
     @Operation(
-            summary = "Update permission",
+            summary = "Update Permission",
             description = "Required permission: <b>'GET /permissions/*</b>"
     )
     public DefaultPermissionResponseDto updatePermissionById(
@@ -95,9 +97,9 @@ public class PermissionController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiMessage(value = "Delete permission")
+    @ApiMessage(value = "Delete Permission")
     @Operation(
-            summary = "Delete permission",
+            summary = "Delete Permission",
             description = "Required permission: <b>'GET /permissions/*</b>"
     )
     public DefaultPermissionResponseDto deletePermissionById(

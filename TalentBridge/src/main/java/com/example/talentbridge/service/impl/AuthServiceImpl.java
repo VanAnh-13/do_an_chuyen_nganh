@@ -33,7 +33,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements com.example.talentbridge.service.AuthService {

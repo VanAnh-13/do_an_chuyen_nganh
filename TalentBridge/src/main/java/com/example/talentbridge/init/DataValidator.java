@@ -5,7 +5,6 @@ import com.example.talentbridge.repository.RoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @RequiredArgsConstructor
 public class DataValidator implements CommandLineRunner {
@@ -23,6 +22,6 @@ public class DataValidator implements CommandLineRunner {
                         || !roleRepository.existsByName("USER")
                         || !roleRepository.existsByName("RECRUITER")
         )
-            throw new IllegalStateException("Dữ liệu bảng Role không hợp lệ");
+            throw new IllegalStateException("Invalid Role table data");
     }
 }

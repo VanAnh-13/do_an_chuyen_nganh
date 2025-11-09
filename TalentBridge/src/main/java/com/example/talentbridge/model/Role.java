@@ -7,13 +7,12 @@ import com.example.talentbridge.model.common.BaseEntity;
 import java.util.List;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "roles")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Role extends BaseEntity {
 
     @Id

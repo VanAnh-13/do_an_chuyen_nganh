@@ -103,7 +103,7 @@ public class JobController {
     @ApiMessage(value = "Get Job list for current user's company")
     @PreAuthorize("hasAuthority('GET /jobs/company')")
     @Operation(
-            summary = "Get Job list by current user's company",
+            summary = "Get Job list for current user's company",
             description = "Required permission: <b>GET /jobs/company</b>"
     )
     public ResponseEntity<?> findAllJobsForRecruiterCompany(
@@ -151,6 +151,7 @@ public class JobController {
         return ResponseEntity.ok(jobService.updateJobById(id, jobRequestDto, true));
     }
 
+
     @DeleteMapping("/{id}")
     @ApiMessage(value = "Delete Job by id")
     @PreAuthorize("hasAuthority('DELETE /jobs/{id}')")
@@ -172,5 +173,6 @@ public class JobController {
     public ResponseEntity<?> deleteJobByIdForRecruiterCompany(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.deleteJobByIdForRecruiterCompany(id));
     }
+
 
 }

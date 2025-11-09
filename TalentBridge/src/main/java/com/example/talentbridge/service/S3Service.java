@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 
-
 public interface S3Service {
     String uploadFile(MultipartFile file, String folder, String fileName, boolean getUrl);
 

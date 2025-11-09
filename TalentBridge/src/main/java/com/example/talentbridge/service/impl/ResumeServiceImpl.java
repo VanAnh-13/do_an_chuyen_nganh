@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
 import java.util.List;
 
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -251,7 +250,7 @@ public class ResumeServiceImpl implements com.example.talentbridge.service.Resum
                 .findById(updateResumeStatusRequestDto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy resume"));
 
-        if (!resume.getUser().getCompany().getId().equals(user.getCompany().getId()))
+        if (!resume.getJob().getCompany().getId().equals(user.getCompany().getId()))
             throw new AccessDeniedException("Không có quyền truy cập");
 
         resume.setStatus(updateResumeStatusRequestDto.getStatus());
@@ -302,10 +301,14 @@ public class ResumeServiceImpl implements com.example.talentbridge.service.Resum
         );
         resumeForDisplayResponseDto.setJob(job);
 
+        String logoUrl = null;
+        if (resume.getJob().getCompany().getCompanyLogo() != null)
+            logoUrl = resume.getJob().getCompany().getCompanyLogo().getLogoUrl();
+
         ResumeForDisplayResponseDto.Company company = new ResumeForDisplayResponseDto.Company(
                 resume.getJob().getCompany().getId(),
                 resume.getJob().getCompany().getName(),
-                resume.getJob().getCompany().getCompanyLogo().getLogoUrl()
+                logoUrl
         );
         resumeForDisplayResponseDto.setCompany(company);
 

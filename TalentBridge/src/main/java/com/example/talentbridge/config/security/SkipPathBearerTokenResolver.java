@@ -6,7 +6,6 @@ import org.springframework.security.oauth2.server.resource.web.DefaultBearerToke
 
 import java.util.List;
 
-
 public class SkipPathBearerTokenResolver implements BearerTokenResolver {
 
     private final BearerTokenResolver delegate = new DefaultBearerTokenResolver();

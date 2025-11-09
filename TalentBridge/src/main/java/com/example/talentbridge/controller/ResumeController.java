@@ -22,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 @Tag(name = "Resume")
 @RestController
 @RequestMapping("/resumes")
@@ -74,7 +75,7 @@ public class ResumeController {
     @ApiMessage(value = "Get resume list for current user's company")
     @PreAuthorize("hasAuthority('GET /resumes/company')")
     @Operation(
-            summary = "Get resume list by current user's company",
+            summary = "Get resume list for current user's company",
             description = "Required permission: <b>GET /resumes/company</b>"
     )
     public ResponseEntity<?> findAllResumesForRecruiterCompany(
@@ -95,10 +96,10 @@ public class ResumeController {
     }
 
     @GetMapping("/me")
-    @ApiMessage(value = "Get resume by user")
+    @ApiMessage(value = "Get resume for user")
     @PreAuthorize("hasAuthority('GET /resumes/me')")
     @Operation(
-            summary = "Get resume of current user",
+            summary = "Get resume for current user",
             description = "Required permission: <b>GET /resumes/me</b>"
     )
     public ResponseEntity<?> findSelfResumes(
@@ -118,10 +119,10 @@ public class ResumeController {
     }
 
     @DeleteMapping("/me/jobs/{jobId}")
-    @ApiMessage(value = "Delete resume by job id of current user")
+    @ApiMessage(value = "Delete resume by job id for current user")
     @PreAuthorize("hasAuthority('DELETE /resumes/me/jobs/{jobId}')")
     @Operation(
-            summary = "Delete resume by job id of current user",
+            summary = "Delete resume by job id for current user",
             description = "Required permission: <b>DELETE /resumes/me/jobs/{jobId}</b>"
     )
     public ResponseEntity<?> removeSelfResumeByJobId(
@@ -170,12 +171,13 @@ public class ResumeController {
     @ApiMessage("Update resume status for current user's company")
     @PreAuthorize("hasAuthority('PUT /resumes/company/status')")
     @Operation(
-            summary = "Update resume status by current user's company",
+            summary = "Update resume status for current user's company",
             description = "Required permission: <b>PUT /resumes/company/status</b>"
     )
     public ResponseEntity<?> updateResumeStatusForRecruiterCompany(
             @RequestBody UpdateResumeStatusRequestDto updateResumeStatusRequestDto) {
         return ResponseEntity.ok(resumeService.updateResumeStatusForRecruiterCompany(updateResumeStatusRequestDto));
     }
+
 
 }

@@ -73,14 +73,14 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    @ApiMessage(value = "Return current user session information")
+    @ApiMessage(value = "Returns current user session information")
     @Operation(summary = "Get current user session information")
     public ResponseEntity<UserSessionResponseDto> getCurrentUser() {
         return ResponseEntity.ok(authService.getCurrentUser());
     }
 
     @GetMapping("/me/details")
-    @ApiMessage(value = "Return current user detailed information")
+    @ApiMessage(value = "Returns current user detailed information")
     @Operation(summary = "Get current user detailed information")
     public ResponseEntity<UserDetailsResponseDto> getCurrentUserDetails() {
         return ResponseEntity.ok(authService.getCurrentUserDetails());
@@ -88,7 +88,7 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     @ApiMessage(value = "Get refresh token")
-    @Operation(summary = "Issue new access token and refresh token")
+    @Operation(summary = "Reissue new access token and refresh token")
     public ResponseEntity<AuthTokenResponseDto> refreshToken(
             @CookieValue(value = "refresh_token") String refreshToken,
             @RequestBody SessionMetaRequest sessionMetaRequest
@@ -119,5 +119,6 @@ public class AuthController {
 
         return ResponseEntity.ok().build();
     }
+
 
 }

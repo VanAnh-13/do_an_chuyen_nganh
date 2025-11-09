@@ -7,7 +7,6 @@ import com.example.talentbridge.model.SessionMeta;
 import java.time.Duration;
 import java.util.List;
 
-
 public interface RefreshTokenRedisService {
     void saveRefreshToken(String token, String userId, SessionMetaRequest sessionMetaRequest, Duration expire);
 

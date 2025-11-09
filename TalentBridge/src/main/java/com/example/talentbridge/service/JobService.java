@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-
 public interface JobService {
     Page<JobResponseDto> findAllJobs(Specification<Job> spec, Pageable pageable);
 

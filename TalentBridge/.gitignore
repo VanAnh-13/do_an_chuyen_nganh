@@ -31,3 +31,41 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Deployment & Security ###
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+nginx/ssl/
+backups/
+backup_*.sql
+gcs-credentials.json
+*-credentials.json
+secrets/
+*.secret
+*-secret.json
+*-key.json
+service-account.json
+serviceaccount.json
+keyfile.json
+application-local.properties
+application-secrets.properties
+deploy-secrets.sh
+secrets.yaml
+credentials/
+.gcp/
+.aws/
+.azure/
+
+### Logs ###
+logs/
+*.log
+
+### Uploads (local development) ###
+uploads/
+
+### Docker ###
+.dockerignore.local

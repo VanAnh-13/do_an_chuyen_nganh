@@ -5,10 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
- * Annotation dùng để chuẩn hóa thông điệp phản hồi từ API.
+/**
+ * Annotation used to standardize API response messages.
  * <p>
- * Khi được gắn vào một method của controller, hệ thống sẽ tự động
- * chèn giá trị `message` vào phần phản hồi JSON theo định dạng chuẩn:
+ * When attached to a controller method, the system will automatically
+ * insert the `message` value into the JSON response according to the standard format:
  * <p>
  * {
  * "message": "...",
@@ -16,9 +17,8 @@ import java.lang.annotation.Target;
  * "data": { ... }
  * }
  * <p>
- * Annotation này sẽ được xử lý qua @ControllerAdvice hoặc AOP tùy theo cách bạn triển khai.
+ * This annotation will be processed via @ControllerAdvice or AOP depending on your implementation.
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ApiMessage {

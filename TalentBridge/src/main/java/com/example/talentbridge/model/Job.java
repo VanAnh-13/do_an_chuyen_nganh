@@ -8,13 +8,12 @@ import com.example.talentbridge.model.constant.Level;
 import java.time.Instant;
 import java.util.List;
 
-
 @Entity
 @Table(name = "jobs")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

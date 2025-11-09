@@ -11,7 +11,6 @@ import org.springframework.http.ResponseCookie;
 
 import java.util.List;
 
-
 public interface AuthService {
 
     UserSessionResponseDto handleRegister(UserRegisterRequestDto userRegisterRequestDto);

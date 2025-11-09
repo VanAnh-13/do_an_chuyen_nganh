@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
@@ -32,10 +31,15 @@ public class SecurityConfiguration {
             "/auth/refresh-token",
 
             // BASIC MODULES
+            "/companies/**",
+            "/jobs/**",
 
             // API DOCS
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
 
             // ACTUATOR
+            "/actuator/**"
     };
 
     @Bean
@@ -48,6 +52,7 @@ public class SecurityConfiguration {
                         .requestMatchers(WHITELIST).permitAll()
                         .anyRequest().authenticated()
                 )
+                .cors(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint)

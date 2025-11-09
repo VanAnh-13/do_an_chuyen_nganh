@@ -1,0 +1,390 @@
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: talentbridge
+
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: talentbridge-config
+  namespace: talentbridge
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  REDIS_HOST: "talentbridge-redis"
+  REDIS_PORT: "6379"
+  SPRING_CACHE_TYPE: "redis"
+  JWT_ACCESS_TOKEN_EXPIRATION: "900"
+  JWT_REFRESH_TOKEN_EXPIRATION: "86400"
+
+---
+# Secret for sensitive data
+apiVersion: v1
+kind: Secret
+metadata:
+  name: talentbridge-secrets
+  namespace: talentbridge
+type: Opaque
+stringData:
+  DB_PASSWORD: "change_this_password"
+  DB_ROOT_PASSWORD: "change_this_root_password"
+  REDIS_PASSWORD: "change_this_redis_password"
+  JWT_SECRET: "change-this-to-a-secure-random-key-at-least-256-bits"
+  # Optional AWS credentials
+  AWS_ACCESS_KEY: ""
+  AWS_SECRET_KEY: ""
+  # Optional Email credentials
+  MAIL_PASSWORD: ""
+
+---
+# PersistentVolumeClaim for MariaDB
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+  namespace: talentbridge
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+# PersistentVolumeClaim for Redis
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: talentbridge
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+# PersistentVolumeClaim for app uploads
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-uploads-pvc
+  namespace: talentbridge
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+# MariaDB Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talentbridge-mariadb
+  namespace: talentbridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        image: mariadb:11.2
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: "talentbridge"
+        - name: MYSQL_USER
+          value: "talentbridge_user"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: talentbridge-secrets
+              key: DB_PASSWORD
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: talentbridge-secrets
+              key: DB_ROOT_PASSWORD
+        - name: TZ
+          value: "Asia/Ho_Chi_Minh"
+        volumeMounts:
+        - name: mariadb-storage
+          mountPath: /var/lib/mysql
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - mysqladmin ping -h localhost
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - mysql -h localhost -u root -p$MYSQL_ROOT_PASSWORD -e "SELECT 1"
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: mariadb-storage
+        persistentVolumeClaim:
+          claimName: mariadb-pvc
+
+---
+# MariaDB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: talentbridge-mariadb
+  namespace: talentbridge
+spec:
+  selector:
+    app: mariadb
+  ports:
+  - port: 3306
+    targetPort: 3306
+  type: ClusterIP
+
+---
+# Redis Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talentbridge-redis
+  namespace: talentbridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:7.2-alpine
+        ports:
+        - containerPort: 6379
+        command:
+        - redis-server
+        - --requirepass
+        - $(REDIS_PASSWORD)
+        - --maxmemory
+        - 256mb
+        - --maxmemory-policy
+        - allkeys-lru
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: talentbridge-secrets
+              key: REDIS_PASSWORD
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: redis-storage
+        persistentVolumeClaim:
+          claimName: redis-pvc
+
+---
+# Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: talentbridge-redis
+  namespace: talentbridge
+spec:
+  selector:
+    app: redis
+  ports:
+  - port: 6379
+    targetPort: 6379
+  type: ClusterIP
+
+---
+# Application Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: talentbridge-app
+  namespace: talentbridge
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: talentbridge
+  template:
+    metadata:
+      labels:
+        app: talentbridge
+    spec:
+      containers:
+      - name: app
+        image: your-docker-registry/talentbridge:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          valueFrom:
+            configMapKeyRef:
+              name: talentbridge-config
+              key: SPRING_PROFILES_ACTIVE
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mariadb://talentbridge-mariadb:3306/talentbridge"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "talentbridge_user"
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: talentbridge-secrets
+              key: DB_PASSWORD
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: talentbridge-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: talentbridge-config
+              key: REDIS_PORT
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: talentbridge-secrets
+              key: REDIS_PASSWORD
+        - name: SPRING_CACHE_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: talentbridge-config
+              key: SPRING_CACHE_TYPE
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: talentbridge-secrets
+              key: JWT_SECRET
+        - name: JWT_ACCESS_TOKEN_EXPIRATION
+          valueFrom:
+            configMapKeyRef:
+              name: talentbridge-config
+              key: JWT_ACCESS_TOKEN_EXPIRATION
+        - name: JWT_REFRESH_TOKEN_EXPIRATION
+          valueFrom:
+            configMapKeyRef:
+              name: talentbridge-config
+              key: JWT_REFRESH_TOKEN_EXPIRATION
+        - name: JAVA_OPTS
+          value: "-Xms512m -Xmx1024m -XX:+UseG1GC"
+        volumeMounts:
+        - name: uploads-storage
+          mountPath: /app/uploads
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 90
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+      volumes:
+      - name: uploads-storage
+        persistentVolumeClaim:
+          claimName: app-uploads-pvc
+
+---
+# Application Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: talentbridge-app
+  namespace: talentbridge
+spec:
+  selector:
+    app: talentbridge
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP
+
+---
+# Ingress (optional - requires ingress controller)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: talentbridge-ingress
+  namespace: talentbridge
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - talentbridge.yourdomain.com
+    secretName: talentbridge-tls
+  rules:
+  - host: talentbridge.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: talentbridge-app
+            port:
+              number: 8080

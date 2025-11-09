@@ -104,4 +104,5 @@ public class SkillController {
         return ResponseEntity.ok(skillService.deleteSkillById(id));
     }
 
+
 }

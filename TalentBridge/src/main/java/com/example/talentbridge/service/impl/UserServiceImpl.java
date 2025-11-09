@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -233,14 +232,14 @@ public class UserServiceImpl implements com.example.talentbridge.service.UserSer
     private void handleSetCompany(User user, Long id) {
         Company company = companyRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy không công ty"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy công ty"));
         user.setCompany(company);
     }
 
     private void handleSetRole(User user, Long id) {
         Role role = roleRepository
                 .findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy không chức vụ"));
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy chức vụ"));
         user.setRole(role);
     }
 

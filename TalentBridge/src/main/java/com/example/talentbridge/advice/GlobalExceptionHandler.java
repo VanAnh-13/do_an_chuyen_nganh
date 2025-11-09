@@ -22,7 +22,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.stream.Collectors;
 
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -74,7 +73,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ApiResponse<>(
-                        ex.getName() + " phải là " + ex.getRequiredType().getSimpleName(),
+                        ex.getName() + " must be " + ex.getRequiredType().getSimpleName(),
                         "PARAM_TYPE_MISMATCH"
                 ));
     }
@@ -87,7 +86,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiResponse<>(
-                        "Thông tin đăng nhập không hợp lệ",
+                        "Invalid login credentials",
                         "BAD_CREDENTIALS"
                 ));
     }
@@ -97,7 +96,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ApiResponse<>(
-                        "Không tìm thấy URL này",
+                        "URL not found",
                         "RESOURCE_NOT_FOUND"
                 ));
     }
@@ -109,7 +108,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(new ApiResponse<>(
-                        "Không tìm thấy cookie " + ex.getCookieName(),
+                        "Cookie not found: " + ex.getCookieName(),
                         "MISSING_COOKIE"
                 ));
     }
@@ -118,7 +117,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleBadJwtException(
             BadJwtException ex
     ) {
-        String message = "Token không hợp lệ (không đúng định dạng, hết hạn)";
+        String message = "Invalid token (incorrect format or expired)";
         if (ex.getMessage() != null)
             message = ex.getMessage();
 
@@ -134,7 +133,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleResourceAlreadyExistsException(
             ResourceAlreadyExistsException ex
     ) {
-        String message = "Tài nguyên này đã tồn tại";
+        String message = "Resource already exists";
         if (ex.getMessage() != null)
             message = ex.getMessage();
 
@@ -163,7 +162,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleAccessDeniedException(
             AccessDeniedException ex
     ) {
-        String message = "Không có quyền truy cập";
+        String message = "Access denied";
         if (ex.getMessage() != null)
             message = ex.getMessage();
 
@@ -180,7 +179,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<?>> handleImmutableFieldException(
             ImmutableFieldException ex
     ) {
-        String message = "Không có quyền truy cập";
+        String message = "Access denied";
         if (ex.getMessage() != null)
             message = ex.getMessage();
 
