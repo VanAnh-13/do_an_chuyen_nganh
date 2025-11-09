@@ -69,3 +69,8 @@ uploads/
 
 ### Docker ###
 .dockerignore.local
+
+### Google Cloud SDK ###
+google-cloud-sdk/
+.google-cloud-sdk/
+gcloud/
