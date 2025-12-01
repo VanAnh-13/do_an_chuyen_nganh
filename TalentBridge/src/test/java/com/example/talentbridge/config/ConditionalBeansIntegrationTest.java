@@ -5,7 +5,6 @@ import com.example.talentbridge.service.S3Service;
 import com.example.talentbridge.service.impl.RefreshTokenInMemoryServiceImpl;
 import com.example.talentbridge.service.impl.RefreshTokenRedisServiceImpl;
 import com.example.talentbridge.service.impl.S3LocalServiceImpl;
-import com.example.talentbridge.service.impl.S3ServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

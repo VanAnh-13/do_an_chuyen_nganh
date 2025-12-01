@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.example.talentbridge.model.common.BaseEntity;
 import com.example.talentbridge.model.constant.Level;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Job extends BaseEntity {
     @Id
@@ -57,6 +60,12 @@ public class Job extends BaseEntity {
     @OneToMany(mappedBy = "job")
     @ToString.Exclude
     private List<Resume> resumes;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("job-threads")
+    @ToString.Exclude
+    @Builder.Default
+    private List<Thread> threads = new ArrayList<>();
 
     public Job(String name, String location, Double salary, Integer quantity, Level level, String description, Instant startDate, Instant endDate, Boolean active) {
         this.name = name;
